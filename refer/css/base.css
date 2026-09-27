@@ -1,0 +1,168 @@
+/* ============================================================
+   Anime Archive — base
+   Reset, globals, shared keyframes, accessibility floors.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  background: var(--wall-950);
+}
+
+html, body {
+  color: var(--paper-100);
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  font-size: var(--step-3);
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+img, picture, svg, video, canvas { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+ul[class], ol[class] { list-style: none; padding: 0; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+p { line-height: 1.6; }
+small { font-size: var(--step-1); }
+code, kbd, pre { font-family: var(--font-lab); font-size: var(--step-2); }
+hr { border: 0; border-top: 1px solid var(--wall-700); }
+
+a { color: var(--paper-100); text-decoration-color: var(--wall-700); text-underline-offset: 3px;
+    transition: color var(--dur-fast) var(--ease-frame); }
+a:hover { color: var(--neon); text-decoration-color: currentColor; }
+
+/* ── Accessibility floors ──────────────────────────────────── */
+
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-frame); }
+::selection { background: var(--sakura); color: var(--wall-950); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip {
+  position: absolute; top: -60px; left: var(--space-4); z-index: 300;
+  padding: var(--space-2) var(--space-4);
+  background: var(--paper-100); color: var(--ink-900);
+  font-family: var(--font-lab); font-size: var(--step-1);
+  text-transform: uppercase; letter-spacing: var(--lab-tracking);
+  text-decoration: none; border-radius: var(--radius-frame);
+  transition: top var(--dur-fast) var(--ease-frame);
+}
+.skip:focus { top: var(--space-3); color: var(--ink-900); }
+
+/* Decorative atmosphere must never be announced or hit-tested. */
+[aria-hidden="true"] { pointer-events: none; }
+
+/* ── The lab register ──────────────────────────────────────── */
+
+.lab, .kicker__badge, .tally, .form__num, .mount__accession, .card__tc,
+.card__ep, .slate__accession, .slate__rows dt, .notice, .state__jp,
+.masthead__rail, .foot__jp, .sheet__jp, .monitor__label, .monitor__readout {
+  font-family: var(--font-lab);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--lab-tracking);
+}
+
+/* ── Kanji labels: a category, never a translation ─────────── */
+
+.state__jp, .drop__jp, .masthead__rail, .sheet__jp, .done__stamp, .foot__jp {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: .35em;
+  text-transform: none;
+}
+
+/* ── Shared keyframes (source app vocabulary, preserved) ───── */
+
+@keyframes glint {
+  from { transform: translateX(-140%) skewX(-18deg); }
+  to   { transform: translateX(260%) skewX(-18deg); }
+}
+
+@keyframes star-pop {
+  0%   { transform: scale(1) rotate(0); }
+  40%  { transform: scale(1.35) rotate(-8deg); }
+  70%  { transform: scale(.92) rotate(3deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes scan-y {
+  0%   { top: -4%; opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { top: 104%; opacity: 0; }
+}
+
+@keyframes stamp-in {
+  0%   { opacity: 0; transform: rotate(-6deg) scale(1.6); }
+  60%  { opacity: 1; transform: rotate(-6deg) scale(.94); }
+  100% { opacity: 1; transform: rotate(-6deg) scale(1); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: .2; }
+  50%      { opacity: .9; }
+}
+
+/* ── Added for this redesign ───────────────────────────────── */
+
+@keyframes mount-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes raking {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes paper-lift {
+  from { opacity: .04; }
+  to   { opacity: .5; }
+}
+
+/* ── Film grain ───────────────────────────────────────────
+   The one texture that sits over everything. Applied to a
+   dedicated fixed layer rather than a ::after on <body>, so it
+   never inherits a stacking context and never intercepts a
+   click. Sourced from the source app's base.css. */
+
+.ground__grain {
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: .05;
+  mix-blend-mode: overlay;
+}
+
+/* ── Motion is optional ────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

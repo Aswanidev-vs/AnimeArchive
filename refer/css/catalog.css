@@ -1,0 +1,721 @@
+/* ============================================================
+   Anime Archive — catalog
+   ------------------------------------------------------------
+   The press (prepare a new frame), the loupe (inspect one) and
+   the slate — the paper label the frame is read against.
+   A contact sheet in a darkroom. See refer/DESIGN.md §3.
+   ============================================================ */
+
+/* An author `display` beats the UA `[hidden]` rule, so every panel JS
+   toggles needs the guard put back or it is on screen before JS runs. */
+
+.loupe[hidden], .progress[hidden], .done[hidden], .slate__edit[hidden],
+.confirm[hidden], .slate__warn[hidden], .monitor__img[hidden],
+.monitor__lines[hidden], .monitor__gridlines[hidden] { display: none; }
+
+
+/* ============================================================
+   THE PRESS — prepare a new frame
+   ============================================================ */
+
+.press {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-7);
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .press { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+}
+
+/* ── The monitor: a device, not a <div> ─────────────────── */
+
+.monitor {
+  background: var(--wall-800);
+  border: 1px solid var(--wall-700);
+  border-radius: var(--radius-plate);
+  box-shadow: var(--lift-1), inset 0 1px 0 rgba(244, 239, 228, .04);
+  overflow: hidden;
+}
+
+.monitor__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--wall-700);
+}
+
+.monitor__rec {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  background: #e04a5f;
+  border-radius: 50%;
+  box-shadow: 0 0 7px rgba(224, 74, 95, .7);
+  animation: twinkle 1.6s infinite;
+}
+
+.monitor__label { font-size: var(--step-1); color: var(--paper-300); }
+
+.monitor__grid {
+  margin-left: auto;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--wall-700);
+  border-radius: var(--radius-frame);
+  color: var(--paper-300);
+  font-family: var(--font-lab);
+  font-size: var(--step-1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--lab-tracking);
+  transition: color var(--dur-fast) var(--ease-frame),
+              border-color var(--dur-fast) var(--ease-frame),
+              background-color var(--dur-fast) var(--ease-frame);
+}
+
+.monitor__grid:hover { color: var(--paper-100); border-color: var(--wall-600); }
+
+.monitor__grid[aria-pressed="true"] {
+  color: var(--neon);
+  border-color: var(--neon);
+  background: rgba(95, 210, 240, .08);
+}
+
+.monitor__target {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  background: #05070d;
+  box-shadow: inset 0 0 0 1px var(--wall-700);
+  transition: transform var(--dur-base) var(--ease-frame),
+              box-shadow var(--dur-base) var(--ease-frame);
+}
+
+.monitor__img { max-height: 380px; width: auto; max-width: 100%; }
+
+.monitor__readout {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--wall-700);
+  color: var(--paper-300);
+  font-size: var(--step-1);
+}
+
+/* The scan line: 2px of the machine walking down the frame. */
+
+.monitor__lines {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 2px;
+  background: var(--neon);
+  box-shadow: 0 0 12px 1px rgba(95, 210, 240, .55);
+  animation: scan-y 1.8s linear infinite;
+}
+
+/* Thirds, drawn as gradient layers so there is no extra markup. */
+
+.monitor__gridlines {
+  --gridline: rgba(244, 239, 228, .28);
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, transparent calc(33.333% - .5px), var(--gridline) 0,
+      transparent calc(33.333% + .5px)),
+    linear-gradient(to right, transparent calc(66.667% - .5px), var(--gridline) 0,
+      transparent calc(66.667% + .5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - .5px), var(--gridline) 0,
+      transparent calc(33.333% + .5px)),
+    linear-gradient(to bottom, transparent calc(66.667% - .5px), var(--gridline) 0,
+      transparent calc(66.667% + .5px));
+}
+
+/* The drop target. Two cues, both loud: the wash and the lift. */
+
+.monitor__target:focus-within {
+  box-shadow: inset 0 0 0 1px var(--neon);
+  background-image: linear-gradient(rgba(95, 210, 240, .05), rgba(95, 210, 240, .05));
+}
+
+.monitor__target.is-over {
+  transform: translateY(-3px);
+  outline: 2px dashed var(--sunset);
+  outline-offset: -2px;
+  background-image: linear-gradient(rgba(255, 179, 71, .06), rgba(255, 179, 71, .06));
+  box-shadow: inset 0 0 0 1px var(--sunset), var(--lift-2);
+}
+
+
+/* ── The empty state inside the monitor ─────────────────── */
+
+.drop {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+}
+
+.drop__jp {
+  font-size: var(--step-4);
+  color: var(--paper-100);
+  opacity: .18;
+}
+
+.drop__title { font-size: var(--step-4); color: var(--paper-100); }
+
+.drop__hint { max-width: 34ch; color: var(--paper-300); font-size: var(--step-2); }
+
+.drop__browse {
+  color: var(--neon);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--dur-fast) var(--ease-frame);
+}
+
+.drop__browse:hover { color: var(--paper-100); }
+
+.drop__limit { color: var(--paper-300); font-size: var(--step-1); }
+
+
+/* ── The paper data-entry form ──────────────────────────── */
+
+.form { display: grid; gap: var(--space-4); }
+
+.form__row { display: grid; gap: var(--space-3); }
+
+.form__row--split { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+
+.form__field { display: grid; gap: var(--space-2); }
+
+.form__label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  color: var(--paper-200);
+  font-size: var(--step-2);
+}
+
+.form__num { color: var(--paper-300); font-size: var(--step-1); }
+
+.form__input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--wall-800);
+  border: 1px solid var(--wall-700);
+  border-radius: var(--radius-frame);
+  color: var(--paper-100);
+  transition: border-color var(--dur-fast) var(--ease-frame),
+              background-color var(--dur-fast) var(--ease-frame);
+}
+
+.form__input::placeholder { color: var(--wall-600); }
+
+.form__input--area { resize: vertical; min-height: 92px; line-height: 1.55; }
+
+/* The tint is what carries the error when the border is not looked at. */
+
+.form__input[aria-invalid="true"] {
+  border-color: var(--sunset);
+  background: rgba(255, 179, 71, .2);
+  box-shadow: inset 3px 0 0 var(--sunset);
+}
+
+.form__err { color: var(--sunset); font-size: var(--step-1); }
+
+.form__hint { color: var(--paper-300); font-size: var(--step-1); }
+
+@media (max-width: 520px) {
+  .form__row--split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── The actions, and why the primary is off ────────────── */
+
+.press__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--wall-700);
+}
+
+.press__reason {
+  flex: 1 1 12ch;
+  color: var(--paper-300);
+  font-size: var(--step-1);
+}
+
+.press__reason.is-ok { color: var(--neon); }
+
+.press__spacer { flex: 1 1 var(--space-6); }
+
+
+/* ── Done: the hanko ────────────────────────────────────── */
+
+.done {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-6) var(--space-5);
+  background: var(--wall-900);
+  border: 1px solid var(--wall-700);
+  border-radius: var(--radius-plate);
+  text-align: center;
+}
+
+.done__stamp {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 93, 143, .1);
+  border: 2px solid var(--sakura);
+  border-radius: 50% 46% 52% 48% / 48% 52% 46% 52%;
+  color: var(--sakura);
+  font-size: var(--step-6);
+  transform: rotate(-6deg);
+  animation: stamp-in 520ms var(--ease-snap);
+}
+
+/* The second ring, off-register — ink does not print perfectly. */
+
+.done__stamp::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid currentColor;
+  border-radius: 50% 48% 53% 47% / 50% 46% 54% 50%;
+  opacity: .45;
+}
+
+.done__title { font-size: var(--step-4); }
+
+.done__body { max-width: 42ch; color: var(--paper-300); font-size: var(--step-2); }
+
+.done__acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+
+/* ============================================================
+   THE LOUPE — the frame comes off the wall
+   ============================================================ */
+
+.loupe {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+}
+
+.loupe__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 8, 16, .86);
+  backdrop-filter: blur(10px);
+}
+
+/* Only will-change here: JS owns transform and opacity on the wrapper
+   while the FLIP plays, and a rule that set them would fight the inline
+   values and snap the frame back to the wall. */
+
+.loupe.is-flipping { will-change: transform, opacity; }
+
+/* During the FLIP only the print should be in motion. The toolbar and the
+   slate are left behind on the wall, so the frame reads as lifted off it
+   rather than the whole dialog shrinking into a card. */
+.loupe.is-flipping .loupe__bar,
+.loupe.is-flipping .slate { opacity: 0; }
+.loupe__bar, .slate { transition: opacity var(--dur-fast) var(--ease-frame); }
+
+
+/* A definite height: the image is capped at 100% of the stage, and a
+   percentage max-height resolves to nothing inside an auto-height grid. */
+
+.loupe__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(1240px, calc(100vw - 2 * var(--space-5)));
+  height: min(720px, calc(100vh - var(--space-6)));
+  max-height: calc(100vh - var(--space-6));
+  background: var(--wall-900);
+  border: 1px solid var(--wall-700);
+  border-radius: var(--radius-plate);
+  box-shadow: var(--lift-2);
+  overflow: hidden;
+}
+
+.loupe__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 56px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--wall-900);
+  border-bottom: 1px solid var(--wall-700);
+}
+
+.loupe__eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  color: var(--paper-300);
+  font-size: var(--step-2);
+}
+
+.loupe__eyebrow b {
+  color: var(--paper-100);
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  letter-spacing: .35em;
+}
+
+.loupe__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+/* The bar is --wall-900 and so is the icon plate: lift the controls one
+   step so they are plates on the bar, not holes in it. */
+
+.loupe__tools .icon,
+.loupe__tools .seg { background: var(--wall-800); }
+
+/* The one control that must be findable is the biggest one. */
+
+.icon--close {
+  width: 40px;
+  height: 40px;
+  border-color: var(--wall-600);
+}
+
+.loupe__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  min-height: 0;
+}
+
+.loupe__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  background: #05070d;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.loupe__stage:active { cursor: grabbing; }
+
+.loupe__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* The light-table rail the frame is laid against. */
+
+.loupe__rule {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-4);
+  left: var(--space-4);
+  height: 1px;
+  background: var(--sunset);
+  opacity: .16;
+  box-shadow: 0 0 8px rgba(255, 179, 71, .4);
+}
+
+@media (max-width: 860px) {
+  .loupe__inner { height: auto; overflow-y: auto; }
+
+  .loupe__bar { position: sticky; top: 0; z-index: 2; }
+
+  .loupe__body { grid-template-columns: minmax(0, 1fr); }
+
+  .loupe__stage { min-height: 46vh; }
+}
+
+
+/* ============================================================
+   THE SLATE — the film-can label, in paper
+   ============================================================ */
+
+/* Laid-paper fibre, a lamp catching the top edge, and a shadow thrown
+   left across the lit stage. Without those three the sheet is a sidebar. */
+
+.slate {
+  min-height: 0;
+  padding: var(--space-5);
+  background-color: var(--paper-100);
+  background-image: repeating-linear-gradient(0deg,
+    rgba(7, 9, 17, .028) 0 1px, transparent 1px 3px);
+  border-left: 1px solid rgba(7, 9, 17, .16);
+  color: var(--ink-900);
+  box-shadow: -16px 0 32px -18px rgba(0, 0, 0, .8),
+              inset 0 1px 0 rgba(255, 255, 255, .55);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(7, 9, 17, .35) transparent;
+}
+
+.slate__accession {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(7, 9, 17, .35);
+  color: var(--ink-900);
+  font-size: var(--step-5);
+  letter-spacing: var(--lab-tracking);
+}
+
+.slate__title {
+  margin-top: var(--space-3);
+  color: var(--ink-900);
+  font-size: var(--step-5);
+  line-height: 1.2;
+}
+
+.slate__alt {
+  margin-top: var(--space-2);
+  color: var(--ink-900);
+  font-size: var(--step-1);
+  opacity: .55;
+}
+
+/* Ruled rows: label column, value column, one hairline per row. */
+
+.slate__rows {
+  display: grid;
+  grid-template-columns: minmax(76px, 34%) minmax(0, 1fr);
+  gap: 0 var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.slate__rows dt {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid rgba(7, 9, 17, .12);
+  color: rgba(7, 9, 17, .5);
+  font-size: var(--step-1);
+  text-align: right;
+}
+
+.slate__rows dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid rgba(7, 9, 17, .12);
+  font-family: var(--font-lab);
+  font-size: var(--step-1);
+  overflow-wrap: anywhere;
+}
+
+/* Inert tag labels. Deliberately not `.chip` — that class is the wall's
+   removable filter control, and borrowing it would give a tag the
+   affordances of something you can click. */
+.slate__tag {
+  padding: 0 var(--space-2);
+  background: rgba(7, 9, 17, .06);
+  border: 1px solid rgba(7, 9, 17, .22);
+  border-radius: var(--radius-frame);
+  font-family: var(--font-lab);
+  font-size: var(--step-1);
+}
+
+/* ⚠ is a warning mark, not decoration — inked, not coloured. */
+
+.slate__warn {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(255, 179, 71, .16);
+  border-left: 1px solid var(--sunset);
+  color: var(--ink-900);
+  font-size: var(--step-1);
+}
+
+.slate__warn span { color: #8a4a06; font-weight: 700; }
+
+.slate__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.slate__acts .btn { flex: 1 1 auto; }
+
+/* On paper the ghost and danger buttons need dark ink, and the focus
+   ring cannot be neon — #0d1120 is the machine-dark equivalent. The
+   dark-surface primitives stay in shell.css; only the paper instance
+   is overridden here, and every .btn--danger lives on this sheet. */
+
+.slate :focus-visible { outline-color: #0d1120; }
+
+.slate .btn--primary { color: var(--ink-900); }
+
+.slate .btn--ghost {
+  border-color: rgba(7, 9, 17, .28);
+  color: var(--ink-900);
+}
+
+.slate .btn--ghost:hover {
+  background: rgba(7, 9, 17, .07);
+  border-color: rgba(7, 9, 17, .5);
+  color: var(--ink-900);
+}
+
+.slate .btn--danger {
+  border-color: #b4620f;
+  color: #8a4a06;
+}
+
+.slate .btn--danger:hover {
+  background: #8a4a06;
+  color: var(--paper-100);
+}
+
+
+/* ── Editing the record in place ────────────────────────── */
+
+.slate__edit {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(7, 9, 17, .16);
+}
+
+.slate__edithead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.slate__editlabel {
+  color: var(--ink-900);
+  font-family: var(--font-lab);
+  font-size: var(--step-1);
+  text-transform: uppercase;
+  letter-spacing: var(--lab-tracking);
+}
+
+.slate__err { color: #8a4a06; font-size: var(--step-1); text-align: right; }
+
+.slate__elabel {
+  margin-top: var(--space-2);
+  color: rgba(7, 9, 17, .5);
+  font-family: var(--font-lab);
+  font-size: var(--step-1);
+  text-transform: uppercase;
+  letter-spacing: var(--lab-tracking);
+}
+
+.slate__enote {
+  color: rgba(7, 9, 17, .38);
+  font-family: var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.slate__einput {
+  width: 100%;
+  padding: var(--space-1) 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(7, 9, 17, .28);
+  border-radius: 0;
+  color: var(--ink-900);
+  font-family: var(--font-lab);
+  font-size: var(--step-2);
+}
+
+.slate__einput::placeholder { color: rgba(7, 9, 17, .4); }
+
+.slate__einput:focus-visible { outline-color: #0d1120; }
+
+.slate__einput--area {
+  padding: var(--space-2);
+  border: 1px solid rgba(7, 9, 17, .28);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.slate__erow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.slate__eacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+
+/* ── The destructive confirmation ───────────────────────── */
+
+.confirm {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: rgba(255, 179, 71, .12);
+  border: 1px solid #b4620f;
+  border-radius: var(--radius-frame);
+}
+
+.confirm__title {
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+}
+
+.confirm__body {
+  margin-top: var(--space-2);
+  color: var(--ink-900);
+  font-size: var(--step-1);
+  opacity: .8;
+}
+
+.confirm__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 860px) {
+  .slate {
+    border-top: 1px solid rgba(7, 9, 17, .16);
+    border-left: 0;
+    box-shadow: 0 -16px 32px -18px rgba(0, 0, 0, .8),
+                inset 0 1px 0 rgba(255, 255, 255, .55);
+  }
+
+  .slate__erow { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,80 @@
+/* ============================================================
+   Anime Archive — design tokens
+   ------------------------------------------------------------
+   The whole visual system. Change the token, not the component.
+   Values follow refer/DESIGN.md §3.
+   ============================================================ */
+
+:root {
+  /* ── Ground: the darkroom ────────────────────────────────── */
+  --wall-950: #070911;   /* page ground, darkest value */
+  --wall-900: #0d1120;   /* panels, header glass */
+  --wall-800: #151b2e;   /* raised plates */
+  --wall-700: #222a42;   /* hairlines, borders */
+  --wall-600: #313b58;   /* disabled ink */
+
+  /* ── Paper: the physical stuff ───────────────────────────── */
+  --paper-100: #f4efe4;  /* mount board, primary ink on dark */
+  --paper-200: #d6cfbe;  /* secondary ink, rules */
+  --paper-300: #9d9686;  /* tertiary ink, timestamps */
+  --ink-900:  #070911;   /* ink on paper */
+
+  /* ── Signal: three accents, three jobs, no more ────────────
+     sakura → the collection's heartbeat (starred, primary action)
+     neon   → the machine (focus, active filters, data, progress)
+     sunset → the lamp + the warning (raking light, not-durable) */
+  --sakura: #ff5d8f;
+  --neon:   #5fd2f0;
+  --sunset: #ffb347;
+
+  /* ── Type ────────────────────────────────────────────────── */
+  --font-display: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-body: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Segoe UI', system-ui, sans-serif;
+  --font-lab: 'Courier Prime', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Scale is contractual — unchanged from the source app. */
+  --step-1: 12px;
+  --step-2: 14px;
+  --step-3: 16px;
+  --step-4: 18px;
+  --step-5: 24px;
+  --step-6: 32px;
+  --step-7: 48px;
+  --step-8: 72px;
+
+  /* ── Space ───────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ── Shape: near-square, never pill ──────────────────────── */
+  --radius-frame: 2px;
+  --radius-plate: 3px;
+  --cut: 14px;      /* angular notch — primary action only */
+  --cut-lg: 22px;   /* confirmation stamp only */
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --ease-frame: cubic-bezier(.2, .8, .2, 1);
+  --ease-snap: cubic-bezier(.16, 1, .3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 320ms;
+  --dur-reveal: 650ms;
+
+  /* ── Elevation: distance from the wall, not blur ─────────── */
+  --lift-1: 0 1px 0 rgba(244, 239, 228, .04);
+  --lift-2: 0 14px 30px -12px rgba(0, 0, 0, .7);
+  --focus-ring: var(--neon);
+
+  /* ── Lab register: the machine voice ─────────────────────── */
+  --lab-tracking: .14em;
+  --measure: 62ch;
+  --page-max: 1360px;
+}
