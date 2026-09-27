@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Design tokens - Anime Archive ("Title Sequence" edition)
+   Values are contractual: Wave 2 components consume these names verbatim.
+   Every pre-existing token keeps its NAME and ROLE; this pass re-tunes the
+   values to a cinematic anime-night palette and layers in new accent tokens.
+   Fonts are delivered via <link> (preconnect + parallel load) in
+   nuxt.config.ts instead of a blocking CSS @import.
+   ========================================================================== */
+
+:root {
+  /* Surfaces — ink-navy night ---------------------------------------------- */
+  --wall-950: #0b0e1a;
+  --wall-900: #111629;
+  --wall-800: #1b2242;
+
+  /* Paper / ink ------------------------------------------------------------- */
+  --paper-100: #f6f1e7;
+  --paper-200: #d8d2c6;
+  --ink-900: #0b0e1a;
+
+  /* Accents ----------------------------------------------------------------- */
+  --accent: #ff5d8f; /* sakura — primary action */
+  --accent-soft: #59e0ff; /* neon cyan — secondary highlight */
+
+  /* Named accent aliases (new) ---------------------------------------------- */
+  --sakura: #ff5d8f;
+  --neon: #59e0ff;
+  --sunset: #ffb347;
+
+  /* Typography -------------------------------------------------------------- */
+  --font-display: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-body: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Segoe UI', system-ui,
+    sans-serif;
+
+  /* Type scale (unchanged) --------------------------------------------------- */
+  --step-1: 12px;
+  --step-2: 14px;
+  --step-3: 16px;
+  --step-4: 18px;
+  --step-5: 24px;
+  --step-6: 32px;
+  --step-7: 48px;
+  --step-8: 72px;
+
+  /* Spacing scale (unchanged) ------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Radii - deliberately near-square, never pill shaped. ---------------------- */
+  --radius-none: 0;
+  --radius-frame: 2px;
+
+  /* Angular cut (new) — used with clip-path polygon for the title-card notch. */
+  --cut: 14px;
+  --cut-lg: 22px;
+
+  /* Motion ------------------------------------------------------------------- */
+  --ease-frame: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 250ms;
+  --dur-reveal: 650ms;
+
+  /* Derived ------------------------------------------------------------------ */
+  --wall-line: rgba(246, 241, 231, 0.14);
+  --line-sakura: rgba(255, 93, 143, 0.45);
+  --line-neon: rgba(89, 224, 255, 0.4);
+  --glow-sakura: 0 0 24px rgba(255, 93, 143, 0.35);
+  --glow-neon: 0 0 24px rgba(89, 224, 255, 0.3);
+  --paper-ink: var(--ink-900);
+  --focus-ring: var(--neon);
+}

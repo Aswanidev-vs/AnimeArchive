@@ -1,0 +1,36 @@
+# dependencies
+node_modules
+
+# nuxt build output
+.nuxt
+.output
+.nitro
+.cache
+.data
+dist
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# test + typescript output
+coverage
+*.tsbuildinfo
+
+# env / secrets - never commit real Cloudinary credentials
+.env
+.env.*
+!.env.example
+
+# agent tooling
+.mimocode/
+
+# editor / os
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea
+.vscode/*
+!.vscode/extensions.json

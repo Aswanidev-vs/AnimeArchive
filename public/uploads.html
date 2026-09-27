@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloudinary direct upload — reference only</title>
+  <!--
+    REFERENCE FILE - NOT PART OF THE NUXT APP
+    =========================================
+    This page is a standalone example of DIRECT, UNSIGNED browser-to-Cloudinary
+    uploading. It exists so the upload logic can be studied without running the
+    Nuxt app. It is not the source of truth for app behavior; `pages/upload.vue`
+    plus `services/storage/` own the real flow.
+
+    Honesty notes:
+      - Unsigned uploads are PUBLIC. Anything sent here is addressable on
+        Cloudinary's CDN by anyone with the public_id.
+      - No secrets belong in this file. Cloud name and preset are entered at
+        runtime and never stored.
+      - The Nuxt app does not import this file, and this page does not call it.
+  -->
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      padding: 48px 24px;
+      font-family: system-ui, sans-serif;
+      background: #111014;
+      color: #f4efe6;
+      line-height: 1.5;
+    }
+    main { max-width: 560px; margin: 0 auto; display: grid; gap: 16px; }
+    h1 { font-size: 24px; margin: 0; }
+    .note { color: #f2c14e; font-size: 14px; }
+    label { display: grid; gap: 4px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+    input, button {
+      font: inherit; padding: 8px 12px; border-radius: 4px;
+      border: 1px solid rgba(244, 239, 230, .2);
+      background: #19171d; color: inherit;
+    }
+    button { background: #d94848; border-color: #d94848; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    progress { width: 100%; }
+    img { max-width: 100%; border: 1px solid rgba(244, 239, 230, .2); border-radius: 4px; }
+    output { font-size: 13px; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Direct Cloudinary upload (unsigned)</h1>
+    <p class="note">
+      Reference only — unsigned uploads are public. Credentials are entered at
+      runtime and kept out of source control.
+    </p>
+
+    <label>Cloud name
+      <input id="cloud" type="text" autocomplete="off" placeholder="your-cloud-name">
+    </label>
+    <label>Unsigned upload preset
+      <input id="preset" type="text" autocomplete="off" placeholder="your_unsigned_preset">
+    </label>
+    <label>Frame file
+      <input id="file" type="file" accept="image/*">
+    </label>
+    <button id="send" type="button" disabled>Upload to Cloudinary</button>
+    <progress id="bar" value="0" max="100"></progress>
+    <output id="out" for="bar">Waiting for a file…</output>
+    <img id="preview" alt="" hidden>
+  </main>
+
+  <script>
+    const cloudInput = document.querySelector('#cloud')
+    const presetInput = document.querySelector('#preset')
+    const fileInput = document.querySelector('#file')
+    const sendButton = document.querySelector('#send')
+    const bar = document.querySelector('#bar')
+    const out = document.querySelector('#out')
+    const preview = document.querySelector('#preview')
+
+    let chosenFile = null
+
+    function ready() {
+      sendButton.disabled = !(chosenFile && cloudInput.value && presetInput.value)
+    }
+
+    fileInput.addEventListener('change', () => {
+      chosenFile = fileInput.files[0] ?? null
+      if (chosenFile) {
+        preview.src = URL.createObjectURL(chosenFile)
+        preview.hidden = false
+        out.textContent = `${chosenFile.name} — ${(chosenFile.size / 1024).toFixed(0)} KB`
+      }
+      ready()
+    })
+
+    cloudInput.addEventListener('input', ready)
+    presetInput.addEventListener('input', ready)
+
+    sendButton.addEventListener('click', () => {
+      const cloudName = cloudInput.value.trim()
+      const preset = presetInput.value.trim()
+      if (!chosenFile || !cloudName || !preset) return
+
+      const body = new FormData()
+      body.append('file', chosenFile)
+      body.append('upload_preset', preset)
+
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`)
+
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          bar.value = Math.round((event.loaded / event.total) * 100)
+        }
+      })
+
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const result = JSON.parse(xhr.responseText)
+          out.textContent = `Uploaded: ${result.secure_url}`
+        } else {
+          out.textContent = `Upload failed (${xhr.status}): ${xhr.statusText}`
+        }
+      })
+
+      xhr.addEventListener('error', () => {
+        out.textContent = 'Upload failed: network error.'
+      })
+
+      bar.value = 0
+      out.textContent = 'Uploading…'
+      xhr.send(body)
+    })
+  </script>
+</body>
+</html>
