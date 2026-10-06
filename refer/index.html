@@ -1,407 +1,215 @@
-<!DOCTYPE html>
-<html lang="en" data-view="wall">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Anime Archive — The wall</title>
-<meta name="description" content="A private, browser-only archive of anime frames.">
-<meta name="color-scheme" content="dark">
-<link rel="icon" href="assets/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Shippori+Mincho+B1:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="css/tokens.css">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/shell.css">
-<link rel="stylesheet" href="css/wall.css">
-<link rel="stylesheet" href="css/catalog.css">
-</head>
-<body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Anime Archive - The wall</title>
+    <meta
+      name="description"
+      content="Anime Archive reference redesign: a private frame archive. Browse, search, sort and star still frames; everything stays in your browser."
+    />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
 
-<a class="skip" href="#wall">Skip to the wall</a>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
 
-<!-- ── Darkroom ground ─────────────────────────────────────────── -->
-<div class="ground" aria-hidden="true">
-  <div class="ground__glow ground__glow--sakura"></div>
-  <div class="ground__glow ground__glow--neon"></div>
-  <div class="ground__stars"></div>
-  <div class="ground__halftone"></div>
-  <div class="ground__grain"></div>
-</div>
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/shell.css" />
+    <link rel="stylesheet" href="css/gallery.css" />
+  </head>
 
-<!-- ── Top bar ─────────────────────────────────────────────────── -->
-<header class="topbar">
-  <div class="topbar__in">
-    <a class="brand" href="#wall" data-nav="wall">
-      <img class="brand__seal" src="assets/logo.png" width="44" height="44" alt="">
-      <span class="brand__text">
-        <span class="brand__name">Anime&nbsp;<em>Archive</em></span>
-        <span class="brand__jp">アーカイブ</span>
-      </span>
-    </a>
+  <body data-page="archive">
+    <div class="shell grain">
+      <div class="shell__sky" aria-hidden="true"></div>
+      <a class="shell__skip" href="#main">Skip to content</a>
 
-    <nav class="topbar__nav" aria-label="Primary">
-      <a class="toplink is-current" href="#wall" data-nav="wall" aria-current="page">Wall</a>
-      <a class="toplink" href="#press" data-nav="press">Catalog</a>
-    </nav>
-
-    <button class="cta" type="button" data-act="add">
-      <span class="cta__arrow" aria-hidden="true">↑</span>
-      <span>Add frame</span>
-    </button>
-  </div>
-  <div class="topbar__beam" aria-hidden="true"></div>
-</header>
-
-<main class="page">
-
-  <!-- ══ VIEW: THE WALL ═════════════════════════════════════════ -->
-  <section class="view view--wall" id="wall" data-view-panel="wall">
-
-    <div class="masthead">
-      <div class="masthead__main">
-        <p class="kicker"><span class="kicker__badge">EP.01</span> Private frame collection</p>
-        <h1 class="masthead__title">The wall</h1>
-        <p class="masthead__rule" aria-hidden="true"></p>
-        <p class="masthead__sub">Click a frame to view it full size. Arrow keys move between neighbours.</p>
-        <p class="tally" id="tally" aria-hidden="true"></p>
-      </div>
-      <p class="masthead__rail" aria-hidden="true">記録</p>
-      <div class="masthead__speed" aria-hidden="true"></div>
-    </div>
-
-    <form class="tools" id="tools" role="search" aria-label="Filter the archive" autocomplete="off">
-      <div class="tools__row">
-        <div class="field field--grow">
-          <label class="field__label" for="q">Search</label>
-          <div class="field__box">
-            <input class="field__input" id="q" type="search" placeholder="Titles, series, tags, notes…" autocomplete="off">
-            <kbd class="field__hint" aria-hidden="true">/</kbd>
-          </div>
+      <!-- Header ------------------------------------------------------------ -->
+      <header class="header">
+        <div class="header__inner">
+          <a class="header__brand" href="index.html">
+            <img class="header__seal" src="assets/logo.png" alt="" width="36" height="36" />
+            <span class="header__word">Anime <em>Archive</em></span>
+            <span class="header__jp" aria-hidden="true">記録</span>
+          </a>
+          <nav class="header__nav" aria-label="Primary">
+            <a class="header__link" data-nav="archive" href="index.html">Archive</a>
+            <a class="btn btn--primary" data-nav="add" href="upload.html">Add frame</a>
+          </nav>
         </div>
+        <div class="header__beam" aria-hidden="true"></div>
+      </header>
 
-        <div class="field">
-          <label class="field__label" for="series">Series</label>
-          <div class="field__box">
-            <select class="field__input field__select" id="series"><option value="">All series</option></select>
+      <main id="main" class="shell__main">
+        <!-- Masthead ------------------------------------------------------- -->
+        <section class="masthead">
+          <div class="masthead__lines speedlines" aria-hidden="true"></div>
+          <p class="masthead__side vtext" aria-hidden="true">記録</p>
+
+          <div class="masthead__copy">
+            <p class="masthead__kicker">
+              <span class="masthead__ep">EP.01</span>
+              Private frame collection
+            </p>
+            <h1 class="masthead__title">The wall</h1>
+            <p class="masthead__sub">
+              Click a frame to view it full size; arrow keys step through neighbours,
+              <kbd>/</kbd> jumps back to search.
+            </p>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="field__label" for="sort">Order</label>
-          <div class="field__box">
-            <select class="field__input field__select" id="sort">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="title">Title A–Z</option>
-              <option value="series">By series</option>
+          <div class="ledger" aria-label="Archive statistics">
+            <div class="ledger__head">
+              <span class="label">Registry</span>
+              <span class="label">Local &middot; v1</span>
+            </div>
+            <div class="ledger__row">
+              <span class="ledger__key">Frames</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-frames">000</span>
+            </div>
+            <div class="ledger__row ledger__row--series">
+              <span class="ledger__key">Series</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-series">000</span>
+            </div>
+            <div class="ledger__row ledger__row--starred">
+              <span class="ledger__key">Starred</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-starred">000</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="perf" aria-hidden="true"></div>
+
+        <!-- Toolbar -------------------------------------------------------- -->
+        <div class="toolbar" aria-label="Gallery controls">
+          <div class="toolbar__search" role="search" aria-label="Search the archive">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="M15.5 15.5 21 21" />
+            </svg>
+            <label class="visually-hidden" for="gallery-search">Search titles, series, tags</label>
+            <input
+              id="gallery-search"
+              class="toolbar__input"
+              type="search"
+              placeholder="Search titles, series, tags&hellip;"
+              autocomplete="off"
+            />
+            <span class="toolbar__kbd" aria-hidden="true">/</span>
+          </div>
+
+          <div class="toolbar__select">
+            <label class="visually-hidden" for="gallery-series">Filter by series</label>
+            <select id="gallery-series">
+              <option value="">All series</option>
             </select>
           </div>
+
+          <div class="toolbar__select">
+            <label class="visually-hidden" for="gallery-sort">Sort frames</label>
+            <select id="gallery-sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="title">By title</option>
+              <option value="anime">By series</option>
+            </select>
+          </div>
+
+          <button class="toolbar__fav" id="gallery-fav" type="button" aria-pressed="false">
+            Starred <small>推し</small>
+          </button>
+
+          <button class="toolbar__reset" id="gallery-reset" type="button" disabled>Reset</button>
         </div>
 
-        <button class="toggle" type="button" id="starred" aria-pressed="false">
-          <span class="toggle__star" aria-hidden="true">★</span>
-          <span class="toggle__text">Starred</span>
-          <span class="toggle__jp" aria-hidden="true">推し</span>
-        </button>
-      </div>
+        <div class="filters" id="gallery-chips"></div>
 
-      <div class="tools__row tools__row--split">
-        <div class="chips" id="chips" aria-label="Active filters"></div>
+        <p class="gallery-count" id="gallery-count" role="status">Loading the registry&hellip;</p>
 
-        <div class="seg" role="group" aria-label="Wall layout">
-          <button class="seg__btn is-on" type="button" data-view-btn="wall">Wall</button>
-          <button class="seg__btn" type="button" data-view-btn="series">By series</button>
-        </div>
-      </div>
-    </form>
+        <!-- States + contact sheet ------------------------------------------ -->
+        <div id="gallery-states"></div>
+        <ul class="grid" id="gallery-grid" aria-label="Frame contact sheet"></ul>
+      </main>
 
-    <p class="status" id="status" role="status" aria-live="polite"></p>
-
-    <div class="state" id="state-loading" hidden>
-      <div class="state__plate">
-        <p class="state__jp" aria-hidden="true">読込中</p>
-        <p class="state__title">Hanging the frames…</p>
-      </div>
-    </div>
-
-    <div class="state state--alert" id="state-error" hidden>
-      <div class="state__plate">
-        <p class="state__jp" aria-hidden="true">異常</p>
-        <p class="state__title">The archive could not be read.</p>
-        <p class="state__body" id="state-error-body"></p>
-        <button class="btn btn--ghost" type="button" data-act="retry">Try again</button>
-      </div>
-    </div>
-
-    <div class="state" id="state-empty" hidden>
-      <div class="state__plate state__plate--wide">
-        <p class="state__jp" aria-hidden="true">空白</p>
-        <p class="state__title" id="state-empty-title">The wall is bare.</p>
-        <p class="state__body" id="state-empty-body">Nothing has been archived yet. Add the first frame to start the collection.</p>
-        <div class="state__acts" id="state-empty-acts"></div>
-        <div class="state__speed" aria-hidden="true"></div>
-      </div>
-    </div>
-
-    <div id="reels"></div>
-  </section>
-
-  <!-- ══ VIEW: THE PRESS ════════════════════════════════════════ -->
-  <section class="view view--press" id="press" data-view-panel="press" hidden>
-
-    <div class="masthead masthead--press">
-      <div class="masthead__main">
-        <p class="kicker"><span class="kicker__badge">NEW</span> New acquisition</p>
-        <h1 class="masthead__title">Catalog a frame</h1>
-        <p class="masthead__rule" aria-hidden="true"></p>
-        <p class="masthead__sub">Choose a still, record where it came from, and set it on the wall. It stays in this browser only.</p>
-      </div>
-      <p class="masthead__rail" aria-hidden="true">録</p>
-      <div class="masthead__speed" aria-hidden="true"></div>
-    </div>
-
-    <p class="notice" id="press-notice">
-      <span class="notice__lamp" aria-hidden="true"></span>
-      <span>Stays in this browser — nothing is uploaded. Frames are downscaled to 1920&nbsp;px and re-encoded so they
-      survive a reload; anything still too large for the ~5&nbsp;MB browser budget is kept as a
-      <em>placeholder</em> and flagged on the wall.</span>
-    </p>
-
-    <div class="press">
-      <div class="press__stage">
-        <div class="monitor">
-          <p class="monitor__bar">
-            <span class="monitor__rec" aria-hidden="true"></span>
-            <span class="monitor__label">Preview monitor</span>
-            <button class="monitor__grid" type="button" id="grid-toggle" aria-pressed="false">Framing grid</button>
+      <!-- Footer ------------------------------------------------------------ -->
+      <footer class="footer">
+        <div class="footer__reel" aria-hidden="true"></div>
+        <div class="footer__inner">
+          <p class="footer__note">
+            Stored in this browser only. Nothing is shared, synced, or uploaded.
+            <span aria-hidden="true">&middot;</span>
+            &copy; <span id="year">2026</span> Anime Archive &middot; reference redesign.
           </p>
-
-          <div class="monitor__target" id="dropzone">
-            <div class="drop" id="drop">
-              <p class="drop__jp" aria-hidden="true">投函</p>
-              <p class="drop__title">Set a frame on the wall</p>
-              <p class="drop__hint">Drag an image here, or <button class="drop__browse" type="button" id="browse">browse your files</button>.</p>
-              <p class="drop__limit">JPEG, PNG, WebP, GIF or AVIF — up to 25 MB.</p>
-            </div>
-            <img class="monitor__img" id="preview" alt="" hidden>
-            <div class="monitor__lines" id="scan" aria-hidden="true" hidden></div>
-            <div class="monitor__gridlines" id="gridlines" aria-hidden="true" hidden></div>
-          </div>
-
-          <p class="monitor__readout" id="readout">No frame selected.</p>
-          <input class="visually-hidden" type="file" id="file"
-                 accept="image/jpeg,image/png,image/webp,image/gif,image/avif">
+          <p class="footer__end">以上 &mdash; End of episode</p>
         </div>
-      </div>
-
-      <div class="press__panel">
-        <form class="form" id="form" novalidate>
-          <div class="form__row">
-            <div class="form__field">
-              <label class="form__label" for="f-title"><span class="form__num">01</span> Title</label>
-              <input class="form__input" id="f-title" name="title" required
-                     placeholder="e.g. Rain on the crossing"
-                     aria-describedby="e-title">
-              <p class="form__err" id="e-title" hidden></p>
-            </div>
-          </div>
-
-          <div class="form__row form__row--split">
-            <div class="form__field">
-              <label class="form__label" for="f-series"><span class="form__num">02</span> Series</label>
-              <input class="form__input" id="f-series" name="series" required
-                     placeholder="e.g. Kagerou Line" aria-describedby="e-series">
-              <p class="form__err" id="e-series" hidden></p>
-            </div>
-            <div class="form__field">
-              <label class="form__label" for="f-episode"><span class="form__num">03</span> Episode</label>
-              <input class="form__input" id="f-episode" name="episode" placeholder="EP 04">
-            </div>
-          </div>
-
-          <div class="form__row form__row--split">
-            <div class="form__field">
-              <label class="form__label" for="f-tags"><span class="form__num">04</span> Tags</label>
-              <input class="form__input" id="f-tags" name="tags" placeholder="rain, city, dusk"
-                     aria-describedby="h-tags">
-              <p class="form__hint" id="h-tags">Comma separated.</p>
-            </div>
-            <div class="form__field">
-              <label class="form__label" for="f-timecode"><span class="form__num">05</span> Timecode</label>
-              <input class="form__input" id="f-timecode" name="timecode" placeholder="00:12:41"
-                     inputmode="numeric">
-            </div>
-          </div>
-
-          <div class="form__row">
-            <div class="form__field">
-              <label class="form__label" for="f-note"><span class="form__num">06</span> Note</label>
-              <textarea class="form__input form__input--area" id="f-note" name="note" rows="3"
-                        placeholder="What makes this frame worth keeping?"></textarea>
-            </div>
-          </div>
-        </form>
-
-        <div class="press__acts">
-          <button class="btn btn--primary" type="button" id="submit" disabled>Add to the archive</button>
-          <p class="press__reason" id="submit-reason">Choose a frame to continue.</p>
-          <div class="press__spacer"></div>
-          <button class="btn btn--ghost" type="button" id="reset">Reset</button>
-          <button class="btn btn--ghost" type="button" data-nav="wall">Cancel</button>
-        </div>
-
-        <div class="progress" id="progress" hidden>
-          <div class="progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-               aria-valuenow="0" aria-labelledby="progress-label">
-            <span class="progress__fill" id="progress-fill"></span>
-          </div>
-          <p class="progress__label" id="progress-label" aria-live="polite">Preparing frame</p>
-        </div>
-
-        <div class="done" id="done" hidden>
-          <p class="done__stamp" aria-hidden="true">録</p>
-          <h2 class="done__title">Frame archived</h2>
-          <p class="done__body" id="done-body"></p>
-          <div class="done__acts">
-            <button class="btn btn--primary" type="button" data-nav="wall">Back to the wall</button>
-            <button class="btn btn--ghost" type="button" id="again">Catalog another</button>
-          </div>
-        </div>
-      </div>
+      </footer>
     </div>
-  </section>
 
-</main>
+    <!-- Lightbox ------------------------------------------------------------ -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lb-title"
+      hidden
+    >
+      <div class="lightbox__backdrop" id="lightbox-backdrop"></div>
+      <figure class="lb" id="lightbox-panel">
+        <div class="lb__bar">
+          <span class="label lb__label">詳細 &middot; Frame detail</span>
+          <span class="lb__acc" id="lb-acc">AA-000</span>
+          <span class="lb__counter" id="lb-counter" role="status" aria-live="polite">000 / 000</span>
+          <button class="lb__close" id="lb-close" type="button" aria-label="Close (Esc)">&#10005;</button>
+        </div>
 
-<!-- ── Foot ────────────────────────────────────────────────────── -->
-<footer class="foot">
-  <div class="foot__perf" aria-hidden="true"></div>
-  <div class="foot__in">
-    <p class="foot__line">Anime Archive — frames preserved by a few cousins, for a few cousins.</p>
-    <p class="foot__privacy">Stored in this browser only. Nothing is shared, synced, or uploaded.</p>
-    <div class="foot__meter" id="meter" hidden>
-      <p class="foot__meterlabel">Browser storage</p>
-      <div class="meter"><span class="meter__fill" id="meter-fill"></span></div>
-      <p class="foot__meterval" id="meter-val">—</p>
+        <div class="lb__stage">
+          <button class="lb__nav lb__nav--prev" id="lb-prev" type="button" aria-label="Previous frame">
+            &#8249;
+          </button>
+          <div class="lb__figure">
+            <img id="lb-img" alt="" />
+            <span class="lb__tc" id="lb-tc" hidden></span>
+          </div>
+          <button class="lb__nav lb__nav--next" id="lb-next" type="button" aria-label="Next frame">
+            &#8250;
+          </button>
+        </div>
+
+        <div class="lb__strip" id="lb-strip" role="group" aria-label="Filmstrip of exhibited frames"></div>
+
+        <figcaption class="lb__caption">
+          <div class="lb__titlerow">
+            <h2 class="lb__title" id="lb-title">&mdash;</h2>
+            <button class="lb__fav" id="lb-fav" type="button" aria-pressed="false" aria-label="Star">
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+                <path d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.45L12 17.45 6.2 20.5l1.1-6.45-4.7-4.6 6.5-.95z" />
+              </svg>
+              <span>Star</span>
+            </button>
+          </div>
+
+          <dl class="lb__meta" id="lb-meta"></dl>
+          <ul class="lb__tags" id="lb-tags" hidden></ul>
+          <p class="lb__note" id="lb-note" hidden></p>
+          <p class="lb__warn" id="lb-warn" hidden>
+            Session only &mdash; these pixels are not stored and will not return after a reload.
+          </p>
+        </figcaption>
+      </figure>
     </div>
-    <p class="foot__end"><span class="foot__jp" aria-hidden="true">以上</span> End of episode
-      <button class="foot__key" type="button" id="open-sheet" aria-label="Keyboard shortcuts">
-        <kbd>?</kbd>
-      </button>
-    </p>
-  </div>
-</footer>
 
-<!-- ══ THE LOUPE ════════════════════════════════════════════════ -->
-<div class="loupe" id="loupe" hidden>
-  <div class="loupe__scrim" data-close></div>
-  <div class="loupe__inner" role="dialog" aria-modal="true" aria-labelledby="loupe-title" tabindex="-1">
-    <header class="loupe__bar">
-      <p class="loupe__eyebrow"><b aria-hidden="true">詳細</b> Frame detail</p>
-      <div class="loupe__tools">
-        <div class="seg seg--sm" role="group" aria-label="Zoom">
-          <button class="seg__btn is-on" type="button" data-zoom="fit">Fit</button>
-          <button class="seg__btn" type="button" data-zoom="fill">Fill</button>
-          <button class="seg__btn" type="button" data-zoom="one">1:1</button>
-        </div>
-        <button class="icon" type="button" data-act="prev" aria-label="Previous frame">
-          <span aria-hidden="true">←</span>
-        </button>
-        <button class="icon" type="button" data-act="next" aria-label="Next frame">
-          <span aria-hidden="true">→</span>
-        </button>
-        <button class="icon icon--close" type="button" data-close aria-label="Close frame detail">
-          <span aria-hidden="true">✕</span>
-        </button>
-      </div>
-    </header>
-
-    <div class="loupe__body">
-      <div class="loupe__stage" id="loupe-stage">
-        <img class="loupe__img" id="loupe-img" alt="">
-        <div class="loupe__rule" aria-hidden="true"></div>
-      </div>
-
-      <aside class="slate" id="slate">
-        <p class="slate__accession" id="slate-accession">AA-000</p>
-        <h2 class="slate__title" id="loupe-title">—</h2>
-        <p class="slate__alt" id="slate-alt"></p>
-
-        <dl class="slate__rows" id="slate-rows"></dl>
-
-        <p class="slate__warn" id="slate-warn" hidden>
-          <span aria-hidden="true">⚠</span> The pixels of this frame will not survive a reload.
-        </p>
-
-        <div class="slate__acts">
-          <button class="btn btn--primary btn--sm" type="button" data-act="edit">Edit</button>
-          <button class="btn btn--ghost btn--sm" type="button" data-act="star" id="slate-star">Star</button>
-          <button class="btn btn--danger btn--sm" type="button" data-act="delete">Remove</button>
-        </div>
-
-        <form class="slate__edit" id="slate-edit" hidden novalidate>
-          <div class="slate__edithead">
-            <p class="slate__editlabel">Edit record</p>
-            <p class="slate__err" id="slate-err" hidden></p>
-          </div>
-          <label class="slate__elabel" for="s-title">Title</label>
-          <input class="slate__einput" id="s-title" name="title" required>
-          <label class="slate__elabel" for="s-series">Series</label>
-          <input class="slate__einput" id="s-series" name="series" required>
-          <div class="slate__erow">
-            <div>
-              <label class="slate__elabel" for="s-episode">Episode</label>
-              <input class="slate__einput" id="s-episode" name="episode" placeholder="EP 04">
-            </div>
-            <div>
-              <label class="slate__elabel" for="s-timecode">Timecode</label>
-              <input class="slate__einput" id="s-timecode" name="timecode" placeholder="00:12:41">
-            </div>
-          </div>
-          <label class="slate__elabel" for="s-tags">Tags <span class="slate__enote">comma separated</span></label>
-          <input class="slate__einput" id="s-tags" name="tags">
-          <label class="slate__elabel" for="s-note">Note</label>
-          <textarea class="slate__einput slate__einput--area" id="s-note" name="note" rows="3"></textarea>
-          <div class="slate__eacts">
-            <button class="btn btn--primary btn--sm" type="submit">Save changes</button>
-            <button class="btn btn--ghost btn--sm" type="button" data-act="edit-cancel">Cancel</button>
-          </div>
-        </form>
-
-        <div class="confirm" id="confirm" hidden>
-          <p class="confirm__title" id="confirm-title">Remove this frame from the wall?</p>
-          <p class="confirm__body">The record and the image are deleted from this browser. This cannot be undone.</p>
-          <div class="confirm__acts">
-            <button class="btn btn--danger btn--sm" type="button" data-act="delete-yes">Remove</button>
-            <button class="btn btn--ghost btn--sm" type="button" data-act="delete-no">Keep it</button>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </div>
-</div>
-
-<!-- ══ SHORTCUT SHEET ════════════════════════════════════════════ -->
-<div class="sheet" id="sheet" hidden>
-  <div class="sheet__scrim" data-sheet-close></div>
-  <div class="sheet__inner" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">
-    <div class="sheet__clap" aria-hidden="true"></div>
-    <p class="sheet__jp" aria-hidden="true">操作</p>
-    <h2 class="sheet__title" id="sheet-title">Shortcuts</h2>
-    <div class="sheet__grid" id="sheet-grid"></div>
-    <button class="btn btn--ghost btn--sm sheet__close" type="button" data-sheet-close>Close</button>
-  </div>
-</div>
-
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-
-<!-- Classic scripts, in dependency order: file:// blocks ES module imports,
-     so each module is an IIFE attaching to the single global AA namespace. -->
-<script src="js/store.js"></script>
-<script src="js/wall.js"></script>
-<script src="js/lightbox.js"></script>
-<script src="js/catalog.js"></script>
-<script src="js/app.js"></script>
-</body>
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/shell.js"></script>
+    <script src="js/gallery.js"></script>
+  </body>
 </html>
