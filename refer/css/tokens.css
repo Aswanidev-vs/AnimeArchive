@@ -1,0 +1,103 @@
+/* ==========================================================================
+   DESIGN TOKENS - Anime Archive · "Frame Registry" reference redesign
+   --------------------------------------------------------------------------
+   Contract note: every token from the Nuxt app's assets/css/tokens.css keeps
+   its NAME and VALUE here (the README documents them as the design system).
+   This pass only ADDS tokens: --wall-1000 (deeper ground), --font-data (the
+   registry/ledger voice), ledger + film-strip specifics, and a few derived
+   helpers. Change the token, not the component.
+   ========================================================================== */
+
+:root {
+  /* Surfaces - ink-navy night ---------------------------------------------- */
+  --wall-1000: #06080f; /* deeper ground for the fixed sky layer */
+  --wall-950: #0b0e1a;
+  --wall-900: #111629;
+  --wall-800: #1b2242;
+
+  /* Paper / ink ------------------------------------------------------------- */
+  --paper-100: #f6f1e7;
+  --paper-200: #d8d2c6;
+  --ink-900: #0b0e1a;
+
+  /* Accents - exactly three, three jobs -------------------------------------
+     sakura = starred / primary actions · neon = focus / data / filters
+     sunset = timecode / lamp warmth                       */
+  --accent: #ff5d8f;
+  --accent-soft: #59e0ff;
+  --sakura: #ff5d8f;
+  --neon: #59e0ff;
+  --sunset: #ffb347;
+  --sakura-hover: #ff7ba3;
+  --error: #ff8fb0;
+
+  /* Typography --------------------------------------------------------------
+     Display + body are the brand (loaded from Google Fonts in the HTML).
+     --font-data is this redesign's addition: accession numbers, timecodes,
+     counters and micro-labels all speak in it.                              */
+  --font-display: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-body: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Segoe UI', system-ui,
+    sans-serif;
+  --font-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Type scale (unchanged) --------------------------------------------------- */
+  --step-1: 12px;
+  --step-2: 14px;
+  --step-3: 16px;
+  --step-4: 18px;
+  --step-5: 24px;
+  --step-6: 32px;
+  --step-7: 48px;
+  --step-8: 72px;
+
+  /* Spacing scale (unchanged) ------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Radii - deliberately near-square, never pill shaped. ---------------------- */
+  --radius-none: 0;
+  --radius-frame: 2px;
+
+  /* Angular cut - used with clip-path polygons for notched title cards. ------- */
+  --cut: 14px;
+  --cut-lg: 22px;
+
+  /* Motion ------------------------------------------------------------------- */
+  --ease-frame: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 250ms;
+  --dur-reveal: 650ms;
+
+  /* Derived ------------------------------------------------------------------ */
+  --wall-line: rgba(246, 241, 231, 0.14);
+  --line-sakura: rgba(255, 93, 143, 0.45);
+  --line-neon: rgba(89, 224, 255, 0.4);
+  --glow-sakura: 0 0 24px rgba(255, 93, 143, 0.35);
+  --glow-neon: 0 0 24px rgba(89, 224, 255, 0.3);
+  --paper-ink: var(--ink-900);
+  --focus-ring: var(--neon);
+
+  /* Added in this pass -------------------------------------------------------
+     AA (4.5:1) floors: muted text never drops below --paper-dim, and the
+     ink-on-paper panels use --ink-dim rather than arbitrary opacities.      */
+  --paper-dim: #a8a294; /* >= 4.5:1 on --wall-950 */
+  --ink-dim: #4a4f5e; /* muted text on --paper-100 */
+  --panel: rgba(17, 22, 41, 0.72);
+  --panel-solid: #10152a;
+  --lamp: rgba(255, 179, 71, 0.5); /* raking light on hovered mounts */
+
+  /* Film registry specifics -------------------------------------------------- */
+  --ledger-label: var(--step-1); /* uppercase mono micro-label size */
+  --ledger-tracking: 0.16em;
+  --perf-size: 14px; /* film perforation pitch */
+}

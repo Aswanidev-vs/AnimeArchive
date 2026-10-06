@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Anime Archive - Catalog a frame</title>
+    <meta
+      name="description"
+      content="Anime Archive reference redesign: catalog a new frame. Choose a still, record where it came from, and set it on the wall - it stays in this browser."
+    />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/shell.css" />
+    <link rel="stylesheet" href="css/upload.css" />
+  </head>
+
+  <body data-page="add">
+    <div class="shell grain">
+      <div class="shell__sky" aria-hidden="true"></div>
+      <a class="shell__skip" href="#main">Skip to content</a>
+
+      <!-- Header ------------------------------------------------------------ -->
+      <header class="header">
+        <div class="header__inner">
+          <a class="header__brand" href="index.html">
+            <img class="header__seal" src="assets/logo.png" alt="" width="36" height="36" />
+            <span class="header__word">Anime <em>Archive</em></span>
+            <span class="header__jp" aria-hidden="true">記録</span>
+          </a>
+          <nav class="header__nav" aria-label="Primary">
+            <a class="header__link" data-nav="archive" href="index.html">Archive</a>
+            <a class="btn btn--primary" data-nav="add" href="upload.html">Add frame</a>
+          </nav>
+        </div>
+        <div class="header__beam" aria-hidden="true"></div>
+      </header>
+
+      <main id="main" class="shell__main">
+        <div class="upload-view">
+          <section class="upload-view__masthead">
+            <p class="upload-view__kicker">
+              <span class="upload-view__ep">NEW</span>
+              New acquisition
+            </p>
+            <h1 class="upload-view__title">Catalog a frame</h1>
+            <p class="upload-view__sub">
+              Choose a still, record where it came from, and set it on the wall.
+              It stays in this browser only.
+            </p>
+          </section>
+
+          <div class="perf" aria-hidden="true"></div>
+
+          <!-- Success ------------------------------------------------------ -->
+          <section class="done" id="upload-done" role="status" hidden>
+            <p class="done__stamp" aria-hidden="true">録</p>
+            <h2 class="done__title" id="done-title" tabindex="-1">Frame archived</h2>
+            <p class="done__text"><span id="done-quote"></span> is now on the wall in this browser.</p>
+            <p class="done__note">Stored locally &middot; nothing was uploaded anywhere.</p>
+            <div class="done__actions">
+              <a class="btn btn--primary" id="done-back" href="index.html">Back to the wall</a>
+              <button class="btn btn--quiet" id="done-another" type="button">Catalog another</button>
+            </div>
+          </section>
+
+          <!-- Flow --------------------------------------------------------- -->
+          <form class="upload-view__flow" id="upload-form" novalidate>
+            <!-- Stage: dropzone OR preview monitor -->
+            <div class="upload-view__stage">
+              <div class="dz" id="dropzone">
+                <span class="dz__scan" aria-hidden="true"></span>
+                <svg class="dz__icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="5" y="9" width="38" height="30" />
+                  <path d="M5 31l10-9 7 6 8-9 13 12" />
+                  <circle cx="33" cy="17" r="3.5" />
+                </svg>
+                <h2 class="dz__title">Set a frame on the wall</h2>
+                <p class="dz__hint">Drag an image here, paste one, or browse your files.</p>
+                <button class="dz__hit" id="dz-browse" type="button">Browse files</button>
+                <p class="dz__limits">JPEG, PNG, WebP, GIF or AVIF &mdash; up to 25 MB.</p>
+                <p class="dz__error" id="dz-error" role="alert" hidden></p>
+                <input
+                  class="visually-hidden"
+                  id="file-input"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                  aria-label="Choose an image file"
+                />
+              </div>
+
+              <div class="monitor" id="monitor" hidden>
+                <div class="monitor__bar">
+                  <span class="monitor__rec">REC</span>
+                  <span>Preview monitor</span>
+                </div>
+                <img class="monitor__shot" id="monitor-img" alt="" />
+                <div class="monitor__caption" id="monitor-caption"></div>
+              </div>
+
+              <div class="filebar" id="filebar" hidden>
+                <span class="filebar__name" id="file-name"></span>
+                <span class="filebar__size" id="file-size"></span>
+                <span id="file-dims"></span>
+                <button class="filebar__change" id="file-change" type="button">Change image</button>
+              </div>
+            </div>
+
+            <!-- Slate: numbered production form -->
+            <div class="panel">
+              <div class="panel__head">
+                <span class="label">Production slate</span>
+                <span class="panel__hint">01&ndash;05</span>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="field-title">
+                  <span class="field__num" aria-hidden="true">01</span>
+                  Title <span class="field__req" aria-hidden="true">*</span>
+                </label>
+                <input
+                  class="field__control"
+                  id="field-title"
+                  type="text"
+                  placeholder="e.g. Rain on the crossing"
+                  autocomplete="off"
+                  aria-required="true"
+                  aria-errormessage="err-title"
+                />
+                <p class="field__err" id="err-title" role="alert"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="field-anime">
+                  <span class="field__num" aria-hidden="true">02</span>
+                  Series <span class="field__req" aria-hidden="true">*</span>
+                </label>
+                <input
+                  class="field__control"
+                  id="field-anime"
+                  type="text"
+                  placeholder="e.g. Kagerou Line"
+                  autocomplete="off"
+                  aria-required="true"
+                  aria-errormessage="err-anime"
+                />
+                <p class="field__err" id="err-anime" role="alert"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="field-episode">
+                  <span class="field__num" aria-hidden="true">03</span>
+                  Episode
+                </label>
+                <input
+                  class="field__control"
+                  id="field-episode"
+                  type="text"
+                  placeholder="EP 04"
+                  autocomplete="off"
+                />
+                <p class="field__err" id="err-episode"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="field-tags">
+                  <span class="field__num" aria-hidden="true">04</span>
+                  Tags
+                </label>
+                <input
+                  class="field__control"
+                  id="field-tags"
+                  type="text"
+                  placeholder="rain, city, dusk"
+                  autocomplete="off"
+                />
+                <ul class="field__tags" id="tag-chips"></ul>
+                <p class="field__err" id="err-tags"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="field-note">
+                  <span class="field__num" aria-hidden="true">05</span>
+                  Note
+                </label>
+                <textarea
+                  class="field__control"
+                  id="field-note"
+                  rows="3"
+                  placeholder="Why this frame matters&hellip;"
+                ></textarea>
+                <p class="field__err" id="err-note"></p>
+              </div>
+
+              <div class="form__actions">
+                <button class="btn btn--primary" id="submit-btn" type="submit" disabled>
+                  Add to the archive
+                </button>
+                <button class="btn btn--quiet" id="reset-btn" type="button">Reset fields</button>
+                <button class="btn btn--quiet" id="cancel-btn" type="button">Cancel</button>
+              </div>
+              <p class="form__why" id="submit-why">Choose an image to continue.</p>
+
+              <!-- Honest write indicator: indeterminate, no fake percentage -->
+              <div class="write" id="write-status" aria-live="polite" hidden>
+                <div class="write__bar">
+                  <div class="write__fill"></div>
+                </div>
+                <p class="write__text" id="write-text">Writing to this browser&hellip;</p>
+              </div>
+              <p class="write__error" id="save-error" role="alert" hidden></p>
+
+              <p class="storage-meter" id="storage-meter"></p>
+            </div>
+          </form>
+        </div>
+      </main>
+
+      <!-- Footer ------------------------------------------------------------ -->
+      <footer class="footer">
+        <div class="footer__reel" aria-hidden="true"></div>
+        <div class="footer__inner">
+          <p class="footer__note">
+            Stored in this browser only. Nothing is shared, synced, or uploaded.
+            <span aria-hidden="true">&middot;</span>
+            &copy; <span id="year">2026</span> Anime Archive &middot; reference redesign.
+          </p>
+          <p class="footer__end">以上 &mdash; End of episode</p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/shell.js"></script>
+    <script src="js/upload.js"></script>
+  </body>
+</html>
+

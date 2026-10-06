@@ -1,0 +1,334 @@
+/* ==========================================================================
+   SHELL - night sky, header, footer, shared buttons and panels.
+   ========================================================================== */
+
+/* Night sky --------------------------------------------------------------- */
+.shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.shell__sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 36rem at 88% -6%, rgba(255, 93, 143, 0.16), transparent 62%),
+    radial-gradient(46rem 34rem at -8% 104%, rgba(89, 224, 255, 0.13), transparent 60%),
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(246, 241, 231, 0.9), transparent 100%),
+    radial-gradient(1.5px 1.5px at 34% 64%, rgba(246, 241, 231, 0.75), transparent 100%),
+    radial-gradient(1px 1px at 56% 14%, rgba(246, 241, 231, 0.85), transparent 100%),
+    radial-gradient(1.5px 1.5px at 72% 44%, rgba(246, 241, 231, 0.7), transparent 100%),
+    radial-gradient(1px 1px at 86% 76%, rgba(246, 241, 231, 0.8), transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 86%, rgba(246, 241, 231, 0.65), transparent 100%),
+    linear-gradient(var(--wall-1000), var(--wall-950));
+}
+
+.shell__sky::before {
+  /* two brighter stars breathe on the shared 7s twinkle cadence */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(2px 2px at 12% 22%, #fff, transparent 100%),
+    radial-gradient(2px 2px at 56% 14%, #fff, transparent 100%);
+  animation: twinkle 7s ease-in-out infinite;
+}
+
+.shell__main {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+@media (min-width: 900px) {
+  .shell__main {
+    padding-inline: var(--space-6);
+  }
+}
+
+/* Skip link --------------------------------------------------------------- */
+.shell__skip {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-data);
+  font-size: var(--step-2);
+  color: var(--wall-950);
+  background: var(--neon);
+  text-decoration: none;
+}
+
+.shell__skip:focus {
+  top: var(--space-2);
+}
+
+/* Header ------------------------------------------------------------------ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(11, 14, 26, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+}
+
+@media (min-width: 900px) {
+  .header__inner {
+    padding-inline: var(--space-6);
+  }
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.header__seal {
+  width: 36px;
+  height: 36px;
+  animation: stamp-in 520ms var(--ease-snap) both;
+}
+
+.header__word {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--paper-100);
+}
+
+.header__word em {
+  font-style: italic;
+  background: linear-gradient(90deg, var(--sakura), var(--neon));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.header__jp {
+  display: none;
+  margin-left: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--paper-dim);
+}
+
+@media (min-width: 900px) {
+  .header__jp {
+    display: inline;
+  }
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-left: auto;
+}
+
+.header__link {
+  position: relative;
+  padding: var(--space-2) 0;
+  font-family: var(--font-data);
+  font-size: var(--step-2);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper-200);
+}
+
+.header__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sakura), var(--neon));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-frame);
+}
+
+.header__link:hover,
+.header__link[aria-current='page'] {
+  color: var(--paper-100);
+}
+
+.header__link:hover::after,
+.header__link[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+.header__beam {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-sakura) 30%, var(--line-neon) 70%,
+      transparent);
+}
+
+/* Shared buttons ---------------------------------------------------------- */
+/* Primary: sakura slab with the signature corner notch + glint sweep. ------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-3) var(--space-5);
+  font-family: var(--font-data);
+  font-size: var(--step-2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background var(--dur-fast) var(--ease-frame),
+    color var(--dur-fast) var(--ease-frame), border-color var(--dur-fast) var(--ease-frame),
+    box-shadow var(--dur-fast) var(--ease-frame);
+}
+
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+  color: var(--wall-950);
+  background: var(--sakura);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-140%) skewX(-18deg);
+}
+
+.btn--primary:hover {
+  background: var(--sakura-hover);
+  box-shadow: var(--glow-sakura);
+}
+
+.btn--primary:hover::after {
+  animation: glint 700ms var(--ease-frame);
+}
+
+.btn--quiet {
+  color: var(--paper-200);
+  background: transparent;
+  border-color: var(--wall-line);
+}
+
+.btn--quiet:hover {
+  color: var(--paper-100);
+  border-color: var(--line-neon);
+}
+
+/* Ink variant - sits on the paper (manga panel) empty state. */
+.btn--ink {
+  color: var(--paper-100);
+  background: var(--ink-900);
+}
+
+.btn--ink:hover {
+  background: #1b2242;
+}
+
+.btn--ink-quiet {
+  color: var(--ink-900);
+  background: transparent;
+  border: 2px solid var(--ink-900);
+}
+
+.btn--ink-quiet:hover {
+  color: var(--paper-100);
+  background: var(--ink-900);
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Footer - film perforation strip + end mark ------------------------------ */
+.footer {
+  margin-top: var(--space-9);
+}
+
+.footer__reel {
+  height: 22px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--wall-line) 0 12px,
+    transparent 12px 26px
+  );
+  background-size: 100% 10px;
+  background-repeat: repeat-x;
+  background-position: center;
+  border-block: 1px solid var(--wall-line);
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-4) var(--space-7);
+}
+
+@media (min-width: 900px) {
+  .footer__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--space-6);
+  }
+}
+
+.footer__note {
+  max-width: 52ch;
+  font-size: var(--step-1);
+  line-height: 1.6;
+  color: var(--paper-dim);
+}
+
+.footer__end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--paper-dim);
+}
+
+.footer__end::before {
+  content: '';
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sakura), transparent);
+}
+

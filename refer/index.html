@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Anime Archive - The wall</title>
+    <meta
+      name="description"
+      content="Anime Archive reference redesign: a private frame archive. Browse, search, sort and star still frames; everything stays in your browser."
+    />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/shell.css" />
+    <link rel="stylesheet" href="css/gallery.css" />
+  </head>
+
+  <body data-page="archive">
+    <div class="shell grain">
+      <div class="shell__sky" aria-hidden="true"></div>
+      <a class="shell__skip" href="#main">Skip to content</a>
+
+      <!-- Header ------------------------------------------------------------ -->
+      <header class="header">
+        <div class="header__inner">
+          <a class="header__brand" href="index.html">
+            <img class="header__seal" src="assets/logo.png" alt="" width="36" height="36" />
+            <span class="header__word">Anime <em>Archive</em></span>
+            <span class="header__jp" aria-hidden="true">記録</span>
+          </a>
+          <nav class="header__nav" aria-label="Primary">
+            <a class="header__link" data-nav="archive" href="index.html">Archive</a>
+            <a class="btn btn--primary" data-nav="add" href="upload.html">Add frame</a>
+          </nav>
+        </div>
+        <div class="header__beam" aria-hidden="true"></div>
+      </header>
+
+      <main id="main" class="shell__main">
+        <!-- Masthead ------------------------------------------------------- -->
+        <section class="masthead">
+          <div class="masthead__lines speedlines" aria-hidden="true"></div>
+          <p class="masthead__side vtext" aria-hidden="true">記録</p>
+
+          <div class="masthead__copy">
+            <p class="masthead__kicker">
+              <span class="masthead__ep">EP.01</span>
+              Private frame collection
+            </p>
+            <h1 class="masthead__title">The wall</h1>
+            <p class="masthead__sub">
+              Click a frame to view it full size; arrow keys step through neighbours,
+              <kbd>/</kbd> jumps back to search.
+            </p>
+          </div>
+
+          <div class="ledger" aria-label="Archive statistics">
+            <div class="ledger__head">
+              <span class="label">Registry</span>
+              <span class="label">Local &middot; v1</span>
+            </div>
+            <div class="ledger__row">
+              <span class="ledger__key">Frames</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-frames">000</span>
+            </div>
+            <div class="ledger__row ledger__row--series">
+              <span class="ledger__key">Series</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-series">000</span>
+            </div>
+            <div class="ledger__row ledger__row--starred">
+              <span class="ledger__key">Starred</span>
+              <span class="ledger__leader" aria-hidden="true"></span>
+              <span class="ledger__val" id="stat-starred">000</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="perf" aria-hidden="true"></div>
+
+        <!-- Toolbar -------------------------------------------------------- -->
+        <div class="toolbar" aria-label="Gallery controls">
+          <div class="toolbar__search" role="search" aria-label="Search the archive">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="M15.5 15.5 21 21" />
+            </svg>
+            <label class="visually-hidden" for="gallery-search">Search titles, series, tags</label>
+            <input
+              id="gallery-search"
+              class="toolbar__input"
+              type="search"
+              placeholder="Search titles, series, tags&hellip;"
+              autocomplete="off"
+            />
+            <span class="toolbar__kbd" aria-hidden="true">/</span>
+          </div>
+
+          <div class="toolbar__select">
+            <label class="visually-hidden" for="gallery-series">Filter by series</label>
+            <select id="gallery-series">
+              <option value="">All series</option>
+            </select>
+          </div>
+
+          <div class="toolbar__select">
+            <label class="visually-hidden" for="gallery-sort">Sort frames</label>
+            <select id="gallery-sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="title">By title</option>
+              <option value="anime">By series</option>
+            </select>
+          </div>
+
+          <button class="toolbar__fav" id="gallery-fav" type="button" aria-pressed="false">
+            Starred <small>推し</small>
+          </button>
+
+          <button class="toolbar__reset" id="gallery-reset" type="button" disabled>Reset</button>
+        </div>
+
+        <div class="filters" id="gallery-chips"></div>
+
+        <p class="gallery-count" id="gallery-count" role="status">Loading the registry&hellip;</p>
+
+        <!-- States + contact sheet ------------------------------------------ -->
+        <div id="gallery-states"></div>
+        <ul class="grid" id="gallery-grid" aria-label="Frame contact sheet"></ul>
+      </main>
+
+      <!-- Footer ------------------------------------------------------------ -->
+      <footer class="footer">
+        <div class="footer__reel" aria-hidden="true"></div>
+        <div class="footer__inner">
+          <p class="footer__note">
+            Stored in this browser only. Nothing is shared, synced, or uploaded.
+            <span aria-hidden="true">&middot;</span>
+            &copy; <span id="year">2026</span> Anime Archive &middot; reference redesign.
+          </p>
+          <p class="footer__end">以上 &mdash; End of episode</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Lightbox ------------------------------------------------------------ -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lb-title"
+      hidden
+    >
+      <div class="lightbox__backdrop" id="lightbox-backdrop"></div>
+      <figure class="lb" id="lightbox-panel">
+        <div class="lb__bar">
+          <span class="label lb__label">詳細 &middot; Frame detail</span>
+          <span class="lb__acc" id="lb-acc">AA-000</span>
+          <span class="lb__counter" id="lb-counter" role="status" aria-live="polite">000 / 000</span>
+          <button class="lb__close" id="lb-close" type="button" aria-label="Close (Esc)">&#10005;</button>
+        </div>
+
+        <div class="lb__stage">
+          <button class="lb__nav lb__nav--prev" id="lb-prev" type="button" aria-label="Previous frame">
+            &#8249;
+          </button>
+          <div class="lb__figure">
+            <img id="lb-img" alt="" />
+            <span class="lb__tc" id="lb-tc" hidden></span>
+          </div>
+          <button class="lb__nav lb__nav--next" id="lb-next" type="button" aria-label="Next frame">
+            &#8250;
+          </button>
+        </div>
+
+        <div class="lb__strip" id="lb-strip" role="group" aria-label="Filmstrip of exhibited frames"></div>
+
+        <figcaption class="lb__caption">
+          <div class="lb__titlerow">
+            <h2 class="lb__title" id="lb-title">&mdash;</h2>
+            <button class="lb__fav" id="lb-fav" type="button" aria-pressed="false" aria-label="Star">
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+                <path d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.45L12 17.45 6.2 20.5l1.1-6.45-4.7-4.6 6.5-.95z" />
+              </svg>
+              <span>Star</span>
+            </button>
+          </div>
+
+          <dl class="lb__meta" id="lb-meta"></dl>
+          <ul class="lb__tags" id="lb-tags" hidden></ul>
+          <p class="lb__note" id="lb-note" hidden></p>
+          <p class="lb__warn" id="lb-warn" hidden>
+            Session only &mdash; these pixels are not stored and will not return after a reload.
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/shell.js"></script>
+    <script src="js/gallery.js"></script>
+  </body>
+</html>
