@@ -1,0 +1,57 @@
+:root {
+  --bg: #171816;
+  --surface: #242520;
+  --elevated: #2d2e28;
+  --text: #e8e3d6;
+  --text-2: #aaa79b;
+  --text-muted: #77766d;
+  --accent: #c16a49;
+  --secondary: #89947a;
+  --border: #393a32;
+
+  --radius-card: 22px;
+  --radius-pill: 999px;
+  --radius-btn: 12px;
+
+  color-scheme: dark;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+[data-theme='light'] {
+  --bg: #f1efe8;
+  --surface: #ffffff;
+  --elevated: #e8e5dc;
+  --text: #282925;
+  --text-2: #77776d;
+  --text-muted: #9a9890;
+  --accent: #ae583a;
+  --secondary: #5f6f52;
+  --border: #d9d6cc;
+
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--elevated) 0%, var(--surface) 50%, var(--elevated) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
